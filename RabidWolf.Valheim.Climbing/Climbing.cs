@@ -74,7 +74,7 @@ public class Climbing
                 && runSpeedFactor > 0)
             {
                 var currentSkillFactor = Player.m_localPlayer.GetSkillFactor("Climbing");
-                var currentSkillLevel = Player.m_localPlayer.GetSkillLevel(Skill.fromName("Climbing"));
+                
                 if (currentY >= targetForSkillRaise)
                 {
                     _previousPosition = currentPosition;
@@ -96,7 +96,7 @@ public class Climbing
 
                 if (_logDebugMessages)
                 {
-                    Debug.Log($"Climbing skill level is: {currentSkillLevel} - skill factor is: {currentSkillFactor} - Reducing stamina use by: {(1 - reduceBy) * 100}% - From {v} to {newV} - Percent towards next experience increase {_usage}");
+                    Debug.Log($"Climbing skill factor is: {currentSkillFactor} - Reducing stamina use by: {(1 - reduceBy) * 100}% - From {v} to {newV} - Percent towards next experience increase {_usage}");
                 }
 
                 v = newV;

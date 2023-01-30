@@ -70,7 +70,7 @@ public class Mod : BaseUnityPlugin
         serverConfigLocked = config("1 - General", "Lock Configuration", Toggle.On, "If on, the configuration is locked and can be changed by server admins only.");
         configSync.AddLockingConfigEntry(serverConfigLocked);
 
-        experienceGainedFactor = config("2 - Climbing Adjustments", "Skill Experience Gain Factor", DEFAULT_EXPERIENCE_GAINED_FACTOR, new ConfigDescription($"Factor for experience gained for the climbing skill (Default ={DEFAULT_EXPERIENCE_GAINED_FACTOR})", new AcceptableValueRange<float>(0.01f, 5f)));
+        experienceGainedFactor = config("2 - Climbing Adjustments", "Skill Experience Gain Factor", DEFAULT_EXPERIENCE_GAINED_FACTOR, new ConfigDescription($"Factor for experience gained for the climbing skill (Default ={DEFAULT_EXPERIENCE_GAINED_FACTOR})", new AcceptableValueRange<float>(0.01f, 1f)));
         experienceGainedFactor.SettingChanged += (_, _) => Climbing.SetSkillGainFactor(experienceGainedFactor.Value);
 
         experienceLoss = config("2 - Climbing Adjustments", "Skill Experience Loss", DEFAULT_EXPERIENCE_LOSS, new ConfigDescription($"How much experience to lose in the climbing skill on death (Default = {DEFAULT_EXPERIENCE_LOSS})", new AcceptableValueRange<int>(0, 100)));
