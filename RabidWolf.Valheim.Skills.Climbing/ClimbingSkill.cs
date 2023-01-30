@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RabidWolf.Valheim.Skills;
 
-public class Climbing
+public class ClimbingSkill
 {
     private static Skill _skill;
 
@@ -15,7 +15,7 @@ public class Climbing
     private static int? _staminaReductionPercentage = null!;
     private static bool _logDebugMessages = false;
 
-    public Climbing()
+    public ClimbingSkill()
     {
         _skill = new Skill("Climbing", "climbing-icon.png");
         _skill.Description.English("Allows you to lose less stamina when running up sloped terrain");
@@ -74,7 +74,6 @@ public class Climbing
                 && runSpeedFactor > 0)
             {
                 var currentSkillFactor = Player.m_localPlayer.GetSkillFactor("Climbing");
-                
                 if (currentY >= targetForSkillRaise)
                 {
                     _previousPosition = currentPosition;

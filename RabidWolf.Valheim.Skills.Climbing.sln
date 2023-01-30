@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{1A524310-D002-4740-9A6E-15634943DF46}") = "RabidWolf.Valheim.Climbing", "RabidWolf.Valheim.Climbing\RabidWolf.Valheim.Climbing.csproj", "{160534C5-0BB3-464B-AE14-26E7463E26A8}"
+Project("{1A524310-D002-4740-9A6E-15634943DF46}") = "RabidWolf.Valheim.Skills.Climbing", "RabidWolf.Valheim.Skills.Climbing\RabidWolf.Valheim.Skills.Climbing.csproj", "{160534C5-0BB3-464B-AE14-26E7463E26A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
