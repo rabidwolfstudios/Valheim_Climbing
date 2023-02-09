@@ -3,6 +3,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
 using ServerSync;
+using LocalizationManager;
 
 namespace RabidWolf.Valheim.Skills;
 
@@ -19,7 +20,7 @@ public class Mod : BaseUnityPlugin
 {
     /* Mod definition */
     private const string ModName = "Climbing";
-    private const string ModVersion = "1.0.1";
+    private const string ModVersion = "1.0.3";
     private const string ModGUID = "com.rabid-wolf.valheim.skills.climbing";
 
     /* Configuration */
@@ -50,8 +51,14 @@ public class Mod : BaseUnityPlugin
     }
     private ConfigEntry<T> SkillConfig<T>(string group, string name, T value, string description, bool synchronizedSetting = true) => SkillConfig(group, name, value, new ConfigDescription(description), synchronizedSetting);
 
+    private delegate string LocalizeFunc(string text);
+    private LocalizeFunc Localize;
+
     public void Awake()
     {
+        Localizer.Load();
+        Localize = Localization.instance.Localize;
+
         _ = new ClimbingSkill();
         SetConfiguration();
 
@@ -59,25 +66,25 @@ public class Mod : BaseUnityPlugin
     }
     private void SetConfiguration()
     {
-        serverConfigLocked = SkillConfig("1 - General", "Lock Configuration", true, "If on, the configuration is locked and can be changed by server admins only.");
+        serverConfigLocked = SkillConfig(Localize("$rw_climbing_config_category_general"), Localize("$rw_climbing_config_lock_configuration_name"), true,Localize("$rw_climbing_config_lock_configuration_description"));
         configSync.AddLockingConfigEntry(serverConfigLocked);
 
-        experienceGainedFactor = SkillConfig("2 - Climbing Adjustments", "Skill Experience Gain Factor", DEFAULT_EXPERIENCE_GAINED_FACTOR, new ConfigDescription($"Factor for experience gained for the climbing skill (Default ={DEFAULT_EXPERIENCE_GAINED_FACTOR})", new AcceptableValueRange<float>(0.01f, 1f)));
+        experienceGainedFactor = SkillConfig(Localize("$rw_climbing_config_category_adjustments"), Localize("$rw_climbing_config_skill_experience_gain_factor_name"), DEFAULT_EXPERIENCE_GAINED_FACTOR, new ConfigDescription(string.Format(Localize($"rw_climbing_config_skill_experience_gain_factor_description"), DEFAULT_EXPERIENCE_GAINED_FACTOR), new AcceptableValueRange<float>(0.01f, 1f)));
         experienceGainedFactor.SettingChanged += (_, _) => ClimbingSkill.SetSkillGainFactor(experienceGainedFactor.Value);
 
-        experienceLoss = SkillConfig("2 - Climbing Adjustments", "Skill Experience Loss", DEFAULT_EXPERIENCE_LOSS, new ConfigDescription($"How much experience to lose in the climbing skill on death (Default = {DEFAULT_EXPERIENCE_LOSS})", new AcceptableValueRange<int>(0, 100)));
+        experienceLoss = SkillConfig(Localize("$rw_climbing_config_category_adjustments"), Localize("$rw_climbing_config_skill_experience_loss_name"), DEFAULT_EXPERIENCE_LOSS, new ConfigDescription(string.Format(Localize("$rw_climbing_config_skill_experience_loss_description"), DEFAULT_EXPERIENCE_LOSS), new AcceptableValueRange<int>(0, 100)));
         experienceLoss.SettingChanged += (_, _) => ClimbingSkill.SetExperienceLossFactor(experienceLoss.Value);
 
-        experienceGainedDistance = SkillConfig("2 - Climbing Adjustments", "Skill Experience Distance Gain", DEFAULT_EXPERIENCE_GAINED_DISTANCE, new ConfigDescription($"Distance player must run up slope to gain experience (Default = {DEFAULT_EXPERIENCE_GAINED_DISTANCE})", new AcceptableValueRange<float>(0.01f, 1f)));
+        experienceGainedDistance = SkillConfig(Localize("$rw_climbing_config_category_adjustments"), Localize("$rw_climbing_config_skill_experience_distance_gain_name"), DEFAULT_EXPERIENCE_GAINED_DISTANCE, new ConfigDescription(string.Format(Localize("$rw_climbing_config_skill_experience_distance_gain_description"), DEFAULT_EXPERIENCE_GAINED_DISTANCE), new AcceptableValueRange<float>(0.01f, 1f)));
         experienceGainedDistance.SettingChanged += (_, _) => ClimbingSkill.SetGainedDistance(experienceGainedDistance.Value);
 
-        experienceResetDistance = SkillConfig("2 - Climbing Adjustments", "Skill Experience Distance Reset", DEFAULT_EXPERIENCE_RESET_DISTANCE, new ConfigDescription($"Distance player must come back down a slope from their most recent highest point that gained experience before they gain experience once more running up a slope (Default = {DEFAULT_EXPERIENCE_RESET_DISTANCE})", new AcceptableValueRange<float>(0.01f, 100.00f)));
+        experienceResetDistance = SkillConfig(Localize("$rw_climbing_config_category_adjustments"), Localize("$rw_climbing_config_skill_experience_distance_reset_name"), DEFAULT_EXPERIENCE_RESET_DISTANCE, new ConfigDescription(string.Format(Localize($"rw_climbing_config_skill_experience_distance_reset_description"), DEFAULT_EXPERIENCE_RESET_DISTANCE), new AcceptableValueRange<float>(0.01f, 100.00f)));
         experienceResetDistance.SettingChanged += (_, _) => ClimbingSkill.SetResetDistance(experienceResetDistance.Value);
 
-        staminaReductionPercentAtMax = SkillConfig("2 - Climbing Adjustments", "Stamina Reduction Factor At Max Level", DEFAULT_STAMINA_REDUCTION_PERCENT_AT_MAX, new ConfigDescription($"Maximum stamina reduction at Skill Level 100. The amount of stamina usage to reduce by when climbing. (Default = {DEFAULT_STAMINA_REDUCTION_PERCENT_AT_MAX}", new AcceptableValueRange<int>(0, 100)));
+        staminaReductionPercentAtMax = SkillConfig(Localize("$rw_climbing_config_category_adjustments"), Localize("$rw_climbing_config_stamina_reduction_factor_name"), DEFAULT_STAMINA_REDUCTION_PERCENT_AT_MAX, new ConfigDescription(string.Format(Localize("$rw_climbing_config_stamina_reduction_factor_description"), DEFAULT_STAMINA_REDUCTION_PERCENT_AT_MAX), new AcceptableValueRange<int>(0, 100)));
         staminaReductionPercentAtMax.SettingChanged += (_, _) => ClimbingSkill.SetStaminaReductionPercentage(staminaReductionPercentAtMax.Value);
 
-        logDebugMessages = SkillConfig("3 - Other", "Log Debug Messages", false, "Log debug messages to BepInEx log? This can result in a lot of log spam");
+        logDebugMessages = SkillConfig(Localize("$rw_climbing_config_category_other"), Localize("$rw_climbing_config_log_debug_messages_name"), false, Localize("$rw_climbing_config_log_debug_messages_description"));
         logDebugMessages.SettingChanged += (_, _) => ClimbingSkill.SetLogDebugMessages(logDebugMessages.Value);
 
         ClimbingSkill.SetSkillGainFactor(experienceGainedFactor.Value);
