@@ -1,4 +1,5 @@
-﻿rw_climbing_skill_name: "Climbing"
+﻿placeholder: "nothing"
+rw_climbing_skill_name: "Climbing"
 rw_climbing_skill_description: "Allows you to lose less stamina when running up sloped terrain"
 rw_climbing_debug_message: "Climbing skill factor is: {0} - Reducing stamina use by: {1}% - From {2} to {3} - Percent towards next experience increase {4}"
 rw_climbing_config_category_general: "1 - General"

@@ -19,9 +19,9 @@ namespace RabidWolf.Valheim.Skills;
 public class Mod : BaseUnityPlugin
 {
     /* Mod definition */
-    private const string ModName = "Climbing";
-    private const string ModVersion = "1.0.3";
-    private const string ModGUID = "com.rabid-wolf.valheim.skills.climbing";
+    public const string ModName = "Climbing";
+    public const string ModVersion = "1.0.4";
+    public const string ModGUID = "com.rabid-wolf.valheim.skills.climbing";
 
     /* Configuration */
     private static ConfigEntry<bool> serverConfigLocked = null!;

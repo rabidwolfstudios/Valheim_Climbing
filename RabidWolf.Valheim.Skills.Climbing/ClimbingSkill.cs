@@ -18,8 +18,8 @@ public class ClimbingSkill
     public ClimbingSkill()
     {
         _skill = new Skill("Climbing", "climbing-icon.png");
-        _skill.Name.Alias("rw_climbing_skill_name");
-        _skill.Description.Alias("rw_climbing_skill_description");
+        _skill.Name.Alias("$rw_climbing_skill_name");
+        _skill.Description.Alias("$rw_climbing_skill_description");
         _skill.Configurable = false;
     }
 
@@ -96,7 +96,6 @@ public class ClimbingSkill
 
                 if (_logDebugMessages)
                 {
-                    //Debug.Log($"Climbing skill factor is: {currentSkillFactor} - Reducing stamina use by: {(1 - reduceBy) * 100}% - From {v} to {newV} - Percent towards next experience increase {_usage}");
                     Debug.Log(string.Format(Localization.instance.Localize("$rw_climbing_debug_message"), currentSkillFactor, (1 - reduceBy) * 100, v, newV, _usage));
                 }
 
