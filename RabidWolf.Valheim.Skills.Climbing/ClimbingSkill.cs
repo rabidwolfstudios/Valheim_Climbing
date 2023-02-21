@@ -53,26 +53,31 @@ public class ClimbingSkill
         _staminaReductionPercentage = staminaReductionPercentage;
     }
 
-
-    [HarmonyPatch(typeof(Player), nameof(Player.UseStamina))]
-    private static class ChangeStaminaUsageResetByCounter
+    [HarmonyPatch(typeof(SEMan), nameof(SEMan.ModifyRunStaminaDrain))]
+    [HarmonyPriority(Priority.First)]
+    private static class ChangeStamina
     {
         private static float _usage = 0f;
         private static Vector3 _previousPosition = Vector3.zero;
 
-        private static void Prefix(Player __instance, ref float v)
+        private static bool Prefix(SEMan __instance, float baseDrain, ref float drain)
         {
-            var runSpeedFactor = __instance.GetRunSpeedFactor();
-            var slopeAngle = __instance.GetSlopeAngle();
-            var slideAngle = __instance.GetSlideAngle();
-            var currentPosition = __instance.GetTransform().localPosition;
+            if (!__instance.m_character.IsPlayer() || !__instance.m_character.IsOnGround())
+            {
+                return true;
+            }
+            
+            var isRiding = __instance.m_character.IsRiding();
+            var slopeAngle = __instance.m_character.GetSlopeAngle();
+            var slideAngle = __instance.m_character.GetSlideAngle();
+            var currentPosition = __instance.m_character.GetTransform().localPosition;
             var previousY = _previousPosition.y;
             var currentY = currentPosition.y;
             var targetForSkillRaise = previousY + _experienceGainedDistance.Value; // prevents raising skill by running in place against a rock
             var targetForReset = previousY - _experienceResetDistance.Value;
 
             if (slopeAngle > slideAngle
-                && runSpeedFactor > 0)
+                && !isRiding)
             {
                 var currentSkillFactor = Player.m_localPlayer.GetSkillFactor("Climbing");
                 if (currentY >= targetForSkillRaise)
@@ -92,15 +97,17 @@ public class ClimbingSkill
                     _previousPosition = currentPosition;
                 }
                 var reduceBy = Mathf.Lerp(1f, (float)( (100 - _staminaReductionPercentage.Value) * 0.01), currentSkillFactor);
-                var newV = v * reduceBy;
+                var newUse = drain * reduceBy;
 
                 if (_logDebugMessages)
                 {
-                    Debug.Log(string.Format(Localization.instance.Localize("$rw_climbing_debug_message"), currentSkillFactor, (1 - reduceBy) * 100, v, newV, _usage));
+                    Debug.Log(string.Format(Localization.instance.Localize("$rw_climbing_debug_message"), currentSkillFactor, (1 - reduceBy) * 100, drain, newUse, _usage));
                 }
 
-                v = newV;
+                drain = newUse;
             }
+
+            return true;
         }
     }
 }

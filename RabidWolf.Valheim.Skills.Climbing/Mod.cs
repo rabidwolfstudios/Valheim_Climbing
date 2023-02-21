@@ -20,7 +20,7 @@ public class Mod : BaseUnityPlugin
 {
     /* Mod definition */
     public const string ModName = "Climbing";
-    public const string ModVersion = "1.0.4";
+    public const string ModVersion = "1.0.5";
     public const string ModGUID = "com.rabid-wolf.valheim.skills.climbing";
 
     /* Configuration */
